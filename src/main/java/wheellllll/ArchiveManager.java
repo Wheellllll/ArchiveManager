@@ -3,6 +3,9 @@ package wheellllll;
 /**
  * Created by sweet on 5/4/16.
  */
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 
@@ -29,6 +32,8 @@ public class ArchiveManager {
     private int mInitialDelay = 1;
     private int mPeriod = 1;
     private TimeUnit mTimeUnit = TimeUnit.MINUTES;
+    private boolean isEncrypt = false;//默认不加密
+    private String password = "123456";
 
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH_mm_ss");
 
@@ -71,9 +76,14 @@ public class ArchiveManager {
                 File archiveFolder = new File(mArchiveDir);
                 if (!archiveFolder.exists()) archiveFolder.mkdirs();
 
+
                 ZipUtil.pack(tmpFolder, destArchive);
 
                 FileUtils.deleteDirectory(tmpFolder);
+                if(this.isEncrypt) {
+                    encrypt(destArchive);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -112,5 +122,48 @@ public class ArchiveManager {
 
     public String getArchiveSuffix() {
         return mArchiveSuffix;
+    }
+
+    public boolean isEncrypt() {
+        return isEncrypt;
+    }
+
+    public void setEncrypt(boolean encrypt) {
+        isEncrypt = encrypt;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    //加密
+    public boolean encrypt(File scrPath) {
+        try {
+            if(!new File(scrPath.getName()).exists()) {
+                System.out.println("源路径不存在 "+scrPath);
+                return false;
+            }
+            ZipParameters parameters = new ZipParameters();
+            parameters.setEncryptFiles(true);
+            parameters.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+            parameters.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+            parameters.setPassword(password.toCharArray());
+            File srcFile = new File(scrPath.getName());
+            ZipFile destFile = new ZipFile(scrPath);
+            if(srcFile.isDirectory()) {
+                destFile.addFolder(srcFile, parameters);
+            } else {
+                destFile.addFile(srcFile, parameters);
+            }
+            System.out.println("成功加密文件");
+            return true;
+        } catch (Exception e) {
+            System.out.println("加密文件发生异常:"+e);
+            return false;
+        }
     }
 }
