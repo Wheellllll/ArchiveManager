@@ -12,7 +12,7 @@
 待上传
 
 #### 手工下载
-从 https://github.com/Wheellllll/PerformanceManager/releases 下载最新的jar包添加到项目依赖里去
+从 https://github.com/Wheellllll/ArchiveManager/releases 下载最新的jar包添加到项目依赖里去
 
 ### 使用说明
 
