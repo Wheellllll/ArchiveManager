@@ -6,8 +6,6 @@ package wheellllll;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
-import org.zeroturnaround.zip.ZipUtil;
-import org.zeroturnaround.zip.commons.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,28 +58,25 @@ public class ArchiveManager {
     public void start() {
         sc.scheduleAtFixedRate(() -> {
             try {
-                File tmpFolder = new File(System.getProperty("java.io.tmpdir") + "/.wheellllll"+System.nanoTime());
-                if (!tmpFolder.exists()) tmpFolder.mkdirs();
-
-                for (File folder : folders) {
-                    if (!folder.exists()) folder.mkdirs();
-                    File ttmpFolder = new File(tmpFolder, folder.getName());
-                    if (!ttmpFolder.exists()) ttmpFolder.mkdirs();
-                    FileUtils.copyDirectory(folder, ttmpFolder);
-                    FileUtils.cleanDirectory(folder);
-                }
-
                 File destArchive = new File(mArchiveDir, mArchivePrefix + " " + df.format(new Date()) + "." + mArchiveSuffix);
 
                 File archiveFolder = new File(mArchiveDir);
                 if (!archiveFolder.exists()) archiveFolder.mkdirs();
 
+                ZipParameters parameters = new ZipParameters();
+                if (this.isEncrypt) {
+                    parameters.setEncryptFiles(true);
+                    parameters.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+                    parameters.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+                    parameters.setPassword(password.toCharArray());
+                }
 
-                ZipUtil.pack(tmpFolder, destArchive);
+                ZipFile destFile = new ZipFile(destArchive);
 
-                FileUtils.deleteDirectory(tmpFolder);
-                if(this.isEncrypt) {
-                    encrypt(destArchive);
+                for (File folder : folders) {
+                    if (!folder.exists()) folder.mkdirs();
+                    destFile.addFolder(folder, parameters);
+                    FileUtils.cleanDirectory(folder);
                 }
 
             } catch (Exception e) {
@@ -140,30 +135,4 @@ public class ArchiveManager {
         this.password = password;
     }
 
-    //加密
-    public boolean encrypt(File scrPath) {
-        try {
-            if(!new File(scrPath.getName()).exists()) {
-                System.out.println("源路径不存在 "+scrPath);
-                return false;
-            }
-            ZipParameters parameters = new ZipParameters();
-            parameters.setEncryptFiles(true);
-            parameters.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
-            parameters.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
-            parameters.setPassword(password.toCharArray());
-            File srcFile = new File(scrPath.getName());
-            ZipFile destFile = new ZipFile(scrPath);
-            if(srcFile.isDirectory()) {
-                destFile.addFolder(srcFile, parameters);
-            } else {
-                destFile.addFile(srcFile, parameters);
-            }
-            System.out.println("成功加密文件");
-            return true;
-        } catch (Exception e) {
-            System.out.println("加密文件发生异常:"+e);
-            return false;
-        }
-    }
 }
