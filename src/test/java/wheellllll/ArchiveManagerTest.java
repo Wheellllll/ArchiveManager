@@ -1,7 +1,9 @@
 package wheellllll;
 
+import javafx.scene.shape.Arc;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
@@ -26,6 +28,33 @@ public class ArchiveManagerTest {
         archiveManager.start();
 
         Thread.currentThread().join();
+    }
+
+    @Test
+    public void testIsEncrypt() throws Exception {
+        ArchiveManager manager = new ArchiveManager();
+        manager.setEncrypt(true);
+        assertEquals(true,manager.isEncrypt());
+    }
+        @Test
+    public void testSetEncrypt() throws Exception {
+        ArchiveManager manager = new ArchiveManager();
+        manager.setEncrypt(true);
+        assertEquals(true,manager.isEncrypt());
+    }
+
+    @Test
+    public void testGetPassword() throws Exception {
+        ArchiveManager manager = new ArchiveManager();
+        manager.setPassword("test");
+        assertEquals("test",manager.getPassword());
+    }
+
+    @Test
+    public void testSetPassword() throws Exception {
+        ArchiveManager manager = new ArchiveManager();
+        manager.setPassword("test");
+        assertEquals("test",manager.getPassword());
     }
 
     @Test
@@ -101,3 +130,4 @@ public class ArchiveManagerTest {
         assertEquals("zip",manager.getArchiveSuffix());
     }
 }
+
