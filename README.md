@@ -55,17 +55,15 @@ am.setInterval(1, TimeUnit.DAYS);  //每隔1天压缩一次
 am.setInitialDelay(1);             //延时1天后执行
 ```
 
-#### 添加需要压缩的记录器
-```
-am.addLogger(intervalLogger);
-am.addLogger(realtimeLogger);
-```
-
 #### 添加需要压缩的路径
 ```
 am.addFolder("./log");
 am.addFolder("./llog");
 ```
+
+#### 选择是否需要加密（默认为否）
+am.setEncrypt(true);
+am.setPassword("1234");
 
 #### 启动
 ```java
@@ -79,4 +77,13 @@ am.stop();
 
 ###一个完整的例子
 ```java
+ArchiveManager am = new ArchiveManager();
+//初始化archiveManager
+am.setDatePattern("yyyy-MM-dd");
+am.addFolder("./clientarchive");
+am.setInterval(7, TimeUnit.SECONDS);
+am.setInitialDelay(1);
+am.setEncrypt(true);
+am.setPassword("aaa");
+am.start();
 ```
