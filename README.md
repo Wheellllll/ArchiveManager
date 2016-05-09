@@ -62,8 +62,10 @@ am.addFolder("./llog");
 ```
 
 #### 选择是否需要加密（默认为否）
+```
 am.setEncrypt(true);
 am.setPassword("1234");
+```
 
 #### 启动
 ```java
