@@ -9,7 +9,25 @@
 ### 安装
 
 #### Maven
-待上传
+```xml
+<repositories>
+    <repository>
+        <id>tahiti-nexus-snapshots</id>
+        <name>Tahiti NEXUS</name>
+        <url>http://sse.tongji.edu.cn/tahiti/nexus/content/groups/public</url>
+        <releases><enabled>false</enabled></releases>
+        <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>wheellllll</groupId>
+        <artifactId>ArchiveManager</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
 
 #### 手工下载
 从 https://github.com/Wheellllll/ArchiveManager/releases 下载最新的jar包添加到项目依赖里去

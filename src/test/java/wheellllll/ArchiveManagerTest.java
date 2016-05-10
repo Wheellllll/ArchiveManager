@@ -27,7 +27,7 @@ public class ArchiveManagerTest {
 
         archiveManager.start();
 
-        Thread.currentThread().join();
+//        Thread.currentThread().join();
     }
 
     @Test
